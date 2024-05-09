@@ -30,7 +30,7 @@ jobs:
       - name: Build container base image
         uses: docker/build-push-action@v5
         with:
-          context: ./
+          context: ./docker
           outputs: "type=registry,push=true"
           tags: |
             ghcr.io/${{ steps.get_repo_owner.outputs.repo_owner }}/arc-sidecar:${{ env.RELEASE_VERSION }}
