@@ -10,3 +10,5 @@ RUN apt install -y nordugrid-arc-client
 RUN pip3 install flask pyyaml
 RUN mkdir .knoc
 COPY ./client.conf /root/.arc/client.conf
+COPY ./handles.py /handles.py
+COPY ./SidecarConfig.yaml /SidecarConfig.yaml
