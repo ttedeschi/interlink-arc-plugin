@@ -29,6 +29,11 @@ if args.proxy != "":
     #os.environ["X509_USER_PROXY"] = args.proxy
     with open("/root/.arc/client.conf", "a") as file1:
         file1.writelines(f"proxypath={args.proxy} \n")
+elif args.token != "":
+    with open(args.token) as file1:
+        os.environ["BEARER_TOKEN"] = file1.readlines()[0]
+else:
+    print("YOU MUST SPECIFY A LOCATION EITHER FOR A PROXY FILE OR A TOKEN FILE") 
 dummy_job = args.dummy_job
 
 
