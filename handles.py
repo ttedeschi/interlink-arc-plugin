@@ -11,6 +11,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--ce", help="Computing Element Address", type=str, default="")
 parser.add_argument("--cadir", help="CA directory", type=str, default="")
 parser.add_argument("--proxy", help="Path to proxy file", type=str, default="")
+parser.add_argument("--token", help="Path to token file", type=str, default="")
 parser.add_argument(
     "--dummy-job",
     action="store_true",
