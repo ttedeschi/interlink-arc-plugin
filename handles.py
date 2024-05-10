@@ -590,7 +590,7 @@ def StatusHandler():
         resp[0]["namespace"] = podnamespace
         resp[0]["uid"] = poduid
         print(f"arcstat {jid_job} --json")
-        process = os.popen(f"arcstat {jid_job} --json")
+        process = os.popen(f"export BEARER_TOKEN=$(cat {token_path}) && arcstat {jid_job} --json")
         preprocessed = process.read()
         process.close()
         job_ = json.loads(preprocessed[10:-2])
