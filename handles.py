@@ -395,7 +395,7 @@ def delete_pod(pod):
         data = f.read()
     #jid = int(data.strip())
     jid = data
-    process = os.popen(f"arckill {jid}")
+    process = os.popen(f"export BEARER_TOKEN=$(cat {token_path}) && arckill {jid}")
     preprocessed = process.read()
     process.close()
 
