@@ -593,8 +593,8 @@ def StatusHandler():
         process = os.popen(f"export BEARER_TOKEN=$(cat {token_path}) && arcstat {jid_job} --json")
         preprocessed = process.read()
         process.close()
-        job_ = json.loads(preprocessed[10:-2])
-        status = job_["state"]
+        job_ = json.loads(preprocessed)
+        status = job_["jobs"][0]["state"]
         if status == "Accepted" or status == "Preparing" or status == "Queuing":
             state = {"waiting": {
             }
