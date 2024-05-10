@@ -20,6 +20,8 @@ parser.add_argument(
 parser.add_argument("--port", help="Server port", type=int, default=8000)
 
 args = parser.parse_args()
+global token_path
+token_path = ""
 
 if args.cadir != "":
     #os.environ["X509_CERT_DIR"] = args.cadir
@@ -30,9 +32,10 @@ if args.proxy != "":
     #os.environ["X509_USER_PROXY"] = args.proxy
     with open("/root/.arc/client.conf", "a") as file1:
         file1.writelines(f"proxypath={args.proxy} \n")
+
 elif args.token != "":
-    with open(args.token) as file1:
-        os.environ["BEARER_TOKEN"] = file1.readlines()[0]
+    token_path = args.token
+
 else:
     print("YOU MUST SPECIFY A LOCATION EITHER FOR A PROXY FILE OR A TOKEN FILE") 
 dummy_job = args.dummy_job
@@ -375,7 +378,7 @@ def arc_batch_submit(job):
     logging.info("Submitting ARC job")
     print(f"arcsub --computing-element {args.ce} --jobdescrfile {job}")
     process = os.popen(
-        f"arcsub --computing-element {args.ce} --jobdescrfile {job}"
+        f"export BEARER_TOKEN=$(cat {token_path}) &&  arcsub --computing-element {args.ce} --jobdescrfile {job}"
     )
     preprocessed = process.read()
     process.close()
