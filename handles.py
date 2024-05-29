@@ -425,7 +425,7 @@ def SubmitHandler():
     # READ THE REQUEST ###############
     logging.info("ARC Sidecar: received Submit call")
     request_data_string = request.data.decode("utf-8")
-    print("Decoded", request_data_string)
+    #print("Decoded", request_data_string)
     req = json.loads(request_data_string)[0]
     if req is None or not isinstance(req, dict):
         logging.error("Invalid request data for submitting")
@@ -561,7 +561,7 @@ def StatusHandler():
     logging.info("ARC Sidecar: received GetStatus call")
     request_data_string = request.data.decode("utf-8")
     req = json.loads(request_data_string)[0]
-    print(req)
+    #print(req)
     if req is None or not isinstance(req, dict):
         print("Invalid status request body is: ", req)
         logging.error("Invalid request data")
@@ -589,7 +589,7 @@ def StatusHandler():
         resp[0]["name"] = podname
         resp[0]["namespace"] = podnamespace
         resp[0]["uid"] = poduid
-        print(f"arcstat {jid_job} --json")
+        #print(f"arcstat {jid_job} --json")
         process = os.popen(f"export BEARER_TOKEN=$(cat {token_path}) && arcstat {jid_job} --json")
         preprocessed = process.read()
         process.close()
@@ -623,7 +623,7 @@ def StatusHandler():
                 "image": "NOT IMPLEMENTED",
                 "imageID": "NOT IMPLEMENTED"
             })
-        print(json.dumps(resp))
+        #print(json.dumps(resp))
         return json.dumps(resp), 200
     except Exception as e:
         return f"Something went wrong when retrieving pod status: {e}", 500
