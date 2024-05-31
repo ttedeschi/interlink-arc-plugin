@@ -475,7 +475,7 @@ def SubmitHandler():
             #image = container["image"]
             logging.info("Appending all commands together...")
             input_files = []
-            for mount in mounts[-1].split(","):
+            for mount in (mounts[-1].split(","))[:-1]:
                 input_files.append(mount.split(":")[0])
             local_mounts = ["--bind", ""]
             for mount in (mounts[-1].split(","))[:-1]:
