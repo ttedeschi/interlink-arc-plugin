@@ -595,7 +595,7 @@ def StatusHandler():
         process.close()
         job_ = json.loads(preprocessed)
         status = job_["jobs"][0]["state"]
-        if status == "Accepted" or status == "Preparing" or status == "Queuing":
+        if status == "Accepted" or status == "Preparing" or status == "Queuing" or status == "Submitting":
             state = {"waiting": {
             }
             }
