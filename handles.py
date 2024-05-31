@@ -320,7 +320,7 @@ def produce_arc_singularity_script(containers, metadata, commands, input_files):
         else:
             input_string = ""
             for file_ in input_files:
-                input_string = input_string + f'("{file_}" "") '
+                input_string = input_string + f'("{file_.split("/")[-1]}" "{file_}") '
             job = f"""
 &( executable = "{executable_path}" )
 ( jobname = "wn" )
