@@ -521,6 +521,11 @@ def SubmitHandler():
     print("Job was submitted with cluster id: ", out_jid)
     handle_jid(out_jid, pod)
 
+    resp = {
+            "PodUID": [],
+            "PodJID": []
+        }
+
     try:
         with open(
             InterLinkConfigInst["DataRootFolder"] +
@@ -528,7 +533,9 @@ def SubmitHandler():
             "r",
         ) as f:
             f.read()
-        return "Job submitted successfully", 200
+        resp["PodUID"] = pod["metadata"]["uid"]
+        resp["PodJID"] = out_jid
+        return json.dumps(resp), 200
     except Exception as e:
         logging.error(f"Unable to read JID from file:{e}")
         return "Something went wrong in job submission", 500
@@ -560,19 +567,25 @@ def StatusHandler():
     # READ THE REQUEST #####################
     logging.info("ARC Sidecar: received GetStatus call")
     request_data_string = request.data.decode("utf-8")
-    req = json.loads(request_data_string)[0]
-    #print(req)
-    if req is None or not isinstance(req, dict):
-        print("Invalid status request body is: ", req)
+    req_list = json.loads(request_data_string)
+    if req_list is None or not isinstance(req_list, list):
         logging.error("Invalid request data")
+        logging.error(f"STATUS REQUEST DATA IS THE FOLLOWING: {req_list}")
         return "Invalid request data for getting status", 400
+    if isinstance(req_list, list):
+        if len(req_list) == 0:
+            logging.error("Invalid request data")
+            logging.error(f"STATUS REQUEST DATA IS THE FOLLOWING: {req_list}")
+            return "Invalid request data for getting status", 400
+    req = req_list[0]
 
     # ELABORATE RESPONSE #################
     resp = [
         {
             "name": [],
-            "uid": [],
+            "UID": [],
             "namespace": [],
+            "JID": [],
             "containers": []
         }
     ]
@@ -588,7 +601,8 @@ def StatusHandler():
         poduid = req["metadata"]["uid"]
         resp[0]["name"] = podname
         resp[0]["namespace"] = podnamespace
-        resp[0]["uid"] = poduid
+        resp[0]["UID"] = poduid
+        resp[0]["JID"] = jid_job
         #print(f"arcstat {jid_job} --json")
         process = os.popen(f"export BEARER_TOKEN=$(cat {token_path}) && arcstat {jid_job} --json")
         preprocessed = process.read()
