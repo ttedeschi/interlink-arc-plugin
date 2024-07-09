@@ -662,7 +662,7 @@ app = Flask(__name__)
 app.add_url_rule("/create", view_func=SubmitHandler, methods=["POST"])
 app.add_url_rule("/delete", view_func=StopHandler, methods=["POST"])
 app.add_url_rule("/status", view_func=StatusHandler, methods=["GET"])
-app.add_url_rule("/getLogs", view_func=LogsHandler, methods=["POST"])
+app.add_url_rule("/getLogs", view_func=LogsHandler, methods=["GET"])
 
 if __name__ == "__main__":
     app.run(port=args.port, host="0.0.0.0", debug=True)
