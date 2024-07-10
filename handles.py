@@ -606,7 +606,7 @@ def StatusHandler():
         resp[0]["namespace"] = podnamespace
         resp[0]["UID"] = poduid
         resp[0]["JID"] = jid_job
-        #print(f"arcstat {jid_job} --json")
+        #print(f"arcstat {jid_job} --computing-element {args.ce} --json")
         process = os.popen(f"export BEARER_TOKEN=$(cat {token_path}) && arcstat {jid_job} --json")
         preprocessed = process.read()
         process.close()
