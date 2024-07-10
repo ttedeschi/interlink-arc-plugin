@@ -576,7 +576,10 @@ def StatusHandler():
         if len(req_list) == 0:
             logging.error("Invalid request data")
             logging.error(f"STATUS REQUEST DATA IS THE FOLLOWING: {req_list}")
-            return "Invalid request data for getting status", 400
+            if os.path.isfile(args.token) or os.path.isfile(args.path):
+                return "This is a ping request.. I'm alive!", 200
+            else:
+                return "This is a ping request.. I'm not alive yet, no proxyfile/tokenfile available!", 400
     req = req_list[0]
 
     # ELABORATE RESPONSE #################
