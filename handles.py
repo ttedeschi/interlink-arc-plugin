@@ -12,6 +12,7 @@ parser.add_argument("--ce", help="Computing Element Address", type=str, default=
 parser.add_argument("--cadir", help="CA directory", type=str, default="")
 parser.add_argument("--proxy", help="Path to proxy file", type=str, default="")
 parser.add_argument("--token", help="Path to token file", type=str, default="")
+parser.add_argument("--jobsfile", help="Path to jobs database file", type=str, default="")
 parser.add_argument(
     "--dummy-job",
     action="store_true",
@@ -27,6 +28,10 @@ if args.cadir != "":
     #os.environ["X509_CERT_DIR"] = args.cadir
     with open("/root/.arc/client.conf", "a") as file1:
         file1.writelines(f"cacertificatesdirectory={args.cadir} \n")
+
+if args.jobsfile != "":
+    with open("/root/.arc/client.conf", "a") as file1:
+        file1.writelines(f"joblist={args.jobsfile} \n")
 
 if args.proxy != "":
     #os.environ["X509_USER_PROXY"] = args.proxy
