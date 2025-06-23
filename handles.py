@@ -5,6 +5,7 @@ import subprocess
 import logging
 import yaml
 import argparse
+import re
 
 parser = argparse.ArgumentParser()
 
@@ -518,7 +519,7 @@ def SubmitHandler():
                 )
             elif "args" in container.keys():
                 singularity_command = (
-                    commstr1 + [singularity_options] + envs + local_mounts +
+                    commstr1 + envs + local_mounts +
                     [image] + container["args"]
                 )
             else:
@@ -628,10 +629,12 @@ def StatusHandler():
         process = os.popen(f"export BEARER_TOKEN=$(cat {token_path}) && arcstat {jid_job} --computing-element {args.ce} --json")
         preprocessed = process.read()
         process.close()
+        print(preprocessed)
         job_ = json.loads(preprocessed)
         status = job_["jobs"][0]["state"]
         if status == "Accepted" or status == "Preparing" or status == "Queuing" or status == "Submitting":
             state = {"waiting": {
+                "reason": "ContainerCreating"
             }
             }
             readiness = False
