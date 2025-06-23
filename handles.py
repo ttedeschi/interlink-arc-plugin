@@ -68,17 +68,14 @@ print("Interlink configuration info:", InterLinkConfigInst)
 
 
 def prepare_envs(container):
-    env = ["--env"]
-    env_data = []
+    env = ""
     try:
-        for env_var in container.env:
-            env_data.append(f"{env_var.name}={env_var.value}")
-        env.append(",".join(env_data))
-        return env
+        for env_var in container["env"]:
+            env += f"--env {env_var['name']}={env_var['value']} "
+        return [env]
     except Exception as e:
         logging.info(f"Container has no env specified: {e}")
         return [""]
-
 
 def prepare_mounts(pod, container_standalone):
     mounts = ["--bind"]
