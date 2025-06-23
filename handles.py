@@ -267,21 +267,29 @@ def mount_empty_dir(container, pod):
 
 
 def parse_string_with_suffix(value_str):
+    #should return MB because HTCondor wants MB
     suffixes = {
-        "k": 10**3,
-        "M": 10**6,
-        "G": 10**9,
+        "k": 1/10**3,
+        "M": 1,
+        "G": 10**3,
+        "Ki": 1 / 1024,
+        "Mi": 1,
+        "Gi": 1024,
     }
 
-    numeric_part = value_str[:-1]
-    suffix = value_str[-1]
-
-    if suffix in suffixes:
-        numeric_value = int(float(numeric_part) * suffixes[suffix])
+    match = re.match(r"(\d+)([a-zA-Z]+)", value_str)
+    if match:
+        numeric_part = match.group(1)
+        suffix = match.group(2)
+        if suffix in suffixes:
+            numeric_value = int(float(numeric_part) * suffixes[suffix])
+            return numeric_value
+        else:
+            return 1
     else:
-        numeric_value = int(value_str)
+        print("Unrecognized memory value, setting it to 1 MB")
+        return 1
 
-    return numeric_value
 
 
 def produce_arc_singularity_script(containers, metadata, commands, input_files):
@@ -507,6 +515,11 @@ def SubmitHandler():
                 singularity_command = (
                     commstr1 + envs + local_mounts +
                     [image] + container["command"]
+                )
+            elif "args" in container.keys():
+                singularity_command = (
+                    commstr1 + [singularity_options] + envs + local_mounts +
+                    [image] + container["args"]
                 )
             else:
                 singularity_command = commstr1 + envs + local_mounts + [image]
