@@ -491,7 +491,7 @@ def SubmitHandler():
             #image = container["image"]
             logging.info("Appending all commands together...")
             input_files = []
-             for mount in mounts[-1].split(","):
+            for mount in mounts[-1].split(","):
                 if not "/cvmfs" in mount:
                     input_files.append(mount.split(":")[0])
             local_mounts = ["--bind", ""]
