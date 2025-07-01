@@ -467,6 +467,15 @@ def SubmitHandler():
             envs = prepare_envs(container)
             image = ""
             mounts = [""]
+            singularity_options = metadata.get("annotations", {}).get(
+                    "slurm-job.vk.io/singularity-options", ""
+                )
+            flags = metadata.get("annotations", {}).get(
+                    "slurm-job.vk.io/flags", ""
+                )
+            pre_exec = metadata.get("annotations", {}).get(
+                    "slurm-job.vk.io/pre-exec", ""
+                )
             if containers_standalone is not None:
                 for c in containers_standalone:
                     if c["name"] == container["name"]:
@@ -512,7 +521,9 @@ def SubmitHandler():
 
             if "command" in container.keys() and "args" in container.keys():
                 singularity_command = (
-                    commstr1
+                    pre_exec + "&&" +
+                    + commstr1
+                    + [singularity_options]
                     + envs
                     + local_mounts
                     + [image]
@@ -521,22 +532,38 @@ def SubmitHandler():
                 )
             elif "command" in container.keys():
                 singularity_command = (
-                    commstr1 + envs + local_mounts +
-                    [image] + container["command"]
+                    pre_exec + "&&" +
+                    + commstr1 
+                    + [singularity_options]
+                    + envs 
+                    + local_mounts 
+                    + [image] 
+                    + container["command"]
                 )
             elif "args" in container.keys():
                 singularity_command = (
-                    commstr1 + envs + local_mounts +
-                    [image] + container["args"]
+                    pre_exec + "&&" +
+                    + commstr1
+                    + [singularity_options] 
+                    + envs 
+                    + local_mounts 
+                    + [image] 
+                    + container["args"]
                 )
             else:
-                singularity_command = commstr1 + envs + local_mounts + [image]
+                singularity_command = (
+                    pre_exec + "&&" +
+                    + commstr1 
+                    + [singularity_options]
+                    + envs 
+                    + local_mounts 
+                    + [image]
+                )
             print("singularity_command:", singularity_command)
             singularity_commands.append(singularity_command)
         path = produce_arc_singularity_script(
             containers, metadata, singularity_commands, input_files
         )
-
     else:
         print("host keyword detected, ignoring other containers")
         sitename = containers[0]["image"].split(":")[-1]
