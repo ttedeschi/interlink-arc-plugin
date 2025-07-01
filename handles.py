@@ -521,7 +521,7 @@ def SubmitHandler():
 
             if "command" in container.keys() and "args" in container.keys():
                 singularity_command = (
-                    pre_exec + "&&" 
+                    pre_exec + ["&&"] 
                     + commstr1
                     + [singularity_options]
                     + envs
@@ -532,7 +532,7 @@ def SubmitHandler():
                 )
             elif "command" in container.keys():
                 singularity_command = (
-                    pre_exec + "&&" 
+                    pre_exec + ["&&"] 
                     + commstr1 
                     + [singularity_options]
                     + envs 
@@ -542,7 +542,7 @@ def SubmitHandler():
                 )
             elif "args" in container.keys():
                 singularity_command = (
-                    pre_exec + "&&" 
+                    pre_exec + ["&&"] 
                     + commstr1
                     + [singularity_options] 
                     + envs 
@@ -552,7 +552,7 @@ def SubmitHandler():
                 )
             else:
                 singularity_command = (
-                    pre_exec + "&&" 
+                    pre_exec + ["&&"] 
                     + commstr1 
                     + [singularity_options]
                     + envs 
