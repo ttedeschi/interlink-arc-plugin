@@ -442,7 +442,7 @@ def SubmitHandler():
     logging.info("ARC Sidecar: received Submit call")
     request_data_string = request.data.decode("utf-8")
     #print("Decoded", request_data_string)
-    req = json.loads(request_data_string)[0]
+    req = json.loads(request_data_string)
     if req is None or not isinstance(req, dict):
         logging.error("Invalid request data for submitting")
         print("Invalid submit request body is: ", req)
